@@ -1,6 +1,7 @@
 import 'package:digilearn/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
+const kSpacingUnit = 10;
 const kPrimaryColor = Color(0xFFCD5C5C);
 const kPrimaryLightColor = Color(0xFFFFECDF);
 const kPrimaryGradientColor = LinearGradient(
@@ -25,7 +26,7 @@ final headingStyle = TextStyle(
   height: 1.5,
 );
 
-List<BoxShadow> customshadow = [
+List<BoxShadow> customShadow = [
   BoxShadow(
       color: Colors.white.withOpacity(.5),
       spreadRadius: -5,
@@ -66,5 +67,10 @@ OutlineInputBorder outlineInputBorder() {
 }
 
 List<BoxShadow> boxshadow = [
-  BoxShadow(color: appPrimaryColor, blurRadius: 30, offset: Offset(0, 10))
+  BoxShadow(
+        color: Colors.grey.withOpacity(0.5),
+        spreadRadius: 5,
+        blurRadius: 7,
+        offset: Offset(0, 3), // changes position of shadow
+      ),
 ];

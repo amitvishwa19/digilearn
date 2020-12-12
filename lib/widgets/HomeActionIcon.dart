@@ -18,15 +18,18 @@ class HomeActionIcon extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            height: 50,
-            width: 50,
+            height: 60,
+            width: 60,
             decoration: BoxDecoration(
-                color: appPrimaryColor,
-                borderRadius: BorderRadius.all(Radius.circular(10))),
-            child: Center(child: Icon(icon, color: Colors.white)),
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.all(Radius.circular(50))),
+            child: Center(child: Icon(icon, color: appPrimaryColor)),
           ),
           SizedBox(height: 5),
-          Text(title)
+          Text(
+            title,
+            style: TextStyle(fontSize: 14),
+          )
         ],
       ),
     );

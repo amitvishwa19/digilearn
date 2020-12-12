@@ -65,7 +65,7 @@ class _BodyState extends State<Body> {
                         });
                       },
                       itemCount: splashData.length,
-                      itemBuilder: (context, index) => OnboardContent(
+                      itemBuilder: (context, index) => OnBoardContent(
                             appTitle: Strings.appTitle,
                             appSubtitle: splashData[index]['text'],
                             image: splashData[index]['image'],
@@ -85,9 +85,9 @@ class _BodyState extends State<Body> {
                       onTap: () async {
                         SharedPreferences pref =
                             await SharedPreferences.getInstance();
-                        pref.setBool('onboard_visible', true);
+                        pref.setBool('onBoarding', false);
 
-                        Navigator.pushNamed(context, Auth.routeName);
+                        Navigator.pushReplacementNamed(context, Auth.routeName);
                       },
                       child: Text(
                         "Skip",
@@ -107,7 +107,7 @@ class _BodyState extends State<Body> {
               )
             : InkWell(
                 onTap: () {
-                  Navigator.pushNamed(context, Auth.routeName);
+                  Navigator.pushReplacementNamed(context, Auth.routeName);
                 },
                 child: Container(
                     width: MediaQuery.of(context).size.width,
@@ -136,11 +136,11 @@ class _BodyState extends State<Body> {
   }
 }
 
-//Onboarding content
-class OnboardContent extends StatelessWidget {
+//OnBoarding content
+class OnBoardContent extends StatelessWidget {
   final String appTitle, appSubtitle, image;
 
-  const OnboardContent({Key key, this.appTitle, this.appSubtitle, this.image})
+  const OnBoardContent({Key key, this.appTitle, this.appSubtitle, this.image})
       : super(key: key);
 
   @override

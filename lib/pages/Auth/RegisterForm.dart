@@ -1,5 +1,5 @@
 import 'package:digilearn/utils/theme.dart';
-import 'package:digilearn/widgets/default_button.dart';
+import 'package:digilearn/widgets/DefaultButton.dart';
 import 'package:flutter/material.dart';
 
 class RegisterForm extends StatelessWidget {

@@ -1,4 +1,4 @@
-import 'package:digilearn/utils/constants.dart';
+import 'package:digilearn/utils/Colors.dart';
 import 'package:flutter/material.dart';
 
 class DefaultButton extends StatelessWidget {
@@ -18,7 +18,7 @@ class DefaultButton extends StatelessWidget {
       height: 54,
       child: MaterialButton(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-          color: kPrimaryColor,
+          color: PrimaryColor,
           onPressed: press,
           child: Text(
             text,

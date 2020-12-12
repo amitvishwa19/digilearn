@@ -74,7 +74,7 @@ class _AuthState extends State<Auth> {
               child: Column(
                 children: [
                   Container(
-                    margin: EdgeInsets.only(top: 50),
+                    margin: EdgeInsets.only(top: 60),
                     child: Text(
                       Strings.appTitle,
                       style: TextStyle(
@@ -84,7 +84,7 @@ class _AuthState extends State<Auth> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                    padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
                     child: Text(
                       Strings.introTitle,
                       style: TextStyle(fontSize: 16, color: Colors.white),
@@ -105,12 +105,12 @@ class _AuthState extends State<Auth> {
       padding: EdgeInsets.all(20),
       width: _pageState == 1 ? windowWidth : windowWidth - 40,
       curve: Curves.fastLinearToSlowEaseIn,
-      duration: Duration(milliseconds: 1000),
+      duration: Duration(milliseconds: 2000),
       transform: Matrix4.translationValues(registerXOffset, 200, 1),
       decoration: BoxDecoration(
           color: _registerStackColor,
           borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(25), topRight: Radius.circular(25))),
+              topLeft: Radius.circular(20), topRight: Radius.circular(20))),
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -165,13 +165,13 @@ class _AuthState extends State<Auth> {
     return AnimatedContainer(
       height: MediaQuery.of(context).size.height,
       padding: EdgeInsets.all(20),
-      curve: Curves.fastLinearToSlowEaseIn,
-      duration: Duration(milliseconds: 1000),
+      curve: Curves.fastOutSlowIn,
+      duration: Duration(milliseconds: 600),
       transform: Matrix4.translationValues(0, loginYOffset, 1),
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(25), topRight: Radius.circular(25))),
+              topLeft: Radius.circular(20), topRight: Radius.circular(20))),
       child: SingleChildScrollView(
         child: Column(
           children: [

@@ -1,11 +1,13 @@
-import 'dart:convert';
-
-import 'package:digilearn/pages/Drawer/DrawerScreen.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:digilearn/controllers/AuthController.dart';
+import 'package:digilearn/helpers/SharePref.dart';
+import 'package:digilearn/pages/Auth/Auth.dart';
+import 'package:digilearn/pages/Profile/Profile.dart';
 import 'package:digilearn/utils/constants.dart';
 import 'package:digilearn/widgets/HomeActionIcon.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get/get.dart';
 
 class HomeScreen extends StatefulWidget {
   static String routeName = "/home";
@@ -30,64 +32,45 @@ class _HomeScreenState extends State<HomeScreen> {
         return Future.value(true);
       },
       child: Scaffold(
-        appBar: buildAppBar(),
-        body: Stack(
-          children: [
-            //Drawer Screen
-            DrawerScreen(),
+          appBar: buildAppBar(),
+          body: AnimatedContainer(
+            height: height,
+            duration: Duration(milliseconds: 300),
+            decoration: BoxDecoration(
+                image:
+                    DecorationImage(image: AssetImage("assets/images/bg.png"))),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  //Main Curve Container
+                  Container(
+                    width: width,
+                    height: 60,
+                    decoration: BoxDecoration(
+                        color: !isOpened ? appPrimaryColor : Colors.red[100],
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(10),
+                            bottomRight: Radius.circular(10))),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
 
-            //Home Screen
-            GestureDetector(
-              onTap: () {
-                if (isOpened) {
-                  setState(() {
-                    xOffset = 0;
-                    yOffset = 0;
-                    scaleFactor = 1;
-                    isOpened = false;
-                  });
-                }
-              },
-              child: AnimatedContainer(
-                height: height,
-                transform: Matrix4.translationValues(xOffset, yOffset, 0)
-                  ..scale(scaleFactor),
-                duration: Duration(milliseconds: 300),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(isOpened ? 20 : 0),
-                  color: Colors.red[100],
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      //Main Curve Container
-                      Container(
-                        width: width,
-                        height: 80,
-                        decoration: BoxDecoration(
-                            color:
-                                !isOpened ? appPrimaryColor : Colors.red[100],
-                            borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(10),
-                                bottomRight: Radius.circular(10))),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-
-                        //Option Container
-                        child: Container(
-                          transform: Matrix4.translationValues(0, -50, 0),
-                          width: width,
-                          decoration: BoxDecoration(
-                              boxShadow: boxshadow,
-                              color: Colors.white,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
-                              )),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 20),
-                            child: Row(
+                    //Option Container
+                    child: Container(
+                      transform: Matrix4.translationValues(0, -50, 0),
+                      width: width,
+                      decoration: BoxDecoration(
+                          boxShadow: boxshadow,
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          )),
+                      child: Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                        child: Column(
+                          children: [
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 HomeActionIcon(
@@ -101,69 +84,89 @@ class _HomeScreenState extends State<HomeScreen> {
                                 HomeActionIcon(
                                     title: "Tests",
                                     icon: FontAwesomeIcons.stream),
-                                HomeActionIcon(
-                                  title: "Notice",
-                                  icon: FontAwesomeIcons.bullhorn,
-                                ),
                               ],
                             ),
-                          ),
+                            SizedBox(height: 15),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                HomeActionIcon(
+                                  title: "Chat",
+                                  icon: FontAwesomeIcons.comment,
+                                ),
+                                HomeActionIcon(
+                                  title: "Teachers",
+                                  icon: FontAwesomeIcons.users,
+                                ),
+                                HomeActionIcon(
+                                    title: "Notice",
+                                    icon: FontAwesomeIcons.bullhorn),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Container(
-                          height: 200,
-                          width: width,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Container(
+                      height: 200,
+                      width: width,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                    ),
+                  ),
+                ],
               ),
-            )
-          ],
-        ),
-      ),
+            ),
+          ),
+          bottomNavigationBar: CurvedNavigationBar(
+            height: 50.0,
+            backgroundColor: Colors.white,
+            color: appPrimaryColor,
+            items: [
+              Icon(
+                Icons.verified_user,
+                size: 20,
+                color: Colors.white,
+              ),
+              Icon(Icons.verified_user, size: 20, color: Colors.white),
+              Icon(Icons.home, size: 20, color: Colors.white),
+              Icon(FontAwesomeIcons.user, size: 20, color: Colors.white),
+              Icon(FontAwesomeIcons.powerOff, size: 20, color: Colors.white),
+            ],
+            animationDuration: Duration(microseconds: 300),
+            animationCurve: Curves.bounceInOut,
+            index: 2,
+            onTap: (index) {
+              if (index == 2) {
+                print('Home Page');
+              } else if (index == 3) {
+                Navigator.pushNamed(context, Profile.routeName);
+              } else if (index == 4) {
+                SharePref.setString('token', null);
+                Navigator.pushReplacementNamed(context, Auth.routeName);
+              }
+            },
+          )),
     );
   }
 
-  getUser() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    var user = jsonDecode(pref.getString('user'));
-    return user;
-  }
-
   AppBar buildAppBar() {
-    var user = getUser();
-    print(user);
-
+    final userController = Get.put(UserController());
     return AppBar(
-      leading: isOpened
-          ? AnimatedContainer(
-              duration: Duration(milliseconds: 500),
-              height: 20,
-              child: CircleAvatar(
-                backgroundImage: AssetImage("assets/images/monica.png"),
-                backgroundColor: Colors.transparent,
-              ),
-            )
-          : IconButton(
-              icon: Icon(
-                Icons.menu,
-              ),
-              onPressed: () {
-                setState(() {
-                  xOffset = 250;
-                  yOffset = 60;
-                  scaleFactor = 0.7;
-                  isOpened = true;
-                });
-              }),
+      leading: CircleAvatar(
+        radius: 10,
+        backgroundImage: NetworkImage(
+            'https://cdn3.iconfinder.com/data/icons/minicons-for-web-sites/24/minicons2-14-512.png'),
+        backgroundColor: Colors.green,
+        child: Text(
+          'AV',
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+        ),
+      ),
       actions: [
         IconButton(
             icon: Icon(Icons.notifications),
@@ -173,16 +176,21 @@ class _HomeScreenState extends State<HomeScreen> {
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Amit Vishwa",
-            style: TextStyle(
-                fontSize: 16, color: Colors.white, fontFamily: "Nunito"),
+          GetX<UserController>(
+            builder: (c) {
+              return Text(
+                  '${c.userModel.value.firstname},${c.userModel.value.lastname}',
+                  style: TextStyle(
+                      fontSize: 16, color: Colors.white, fontFamily: "Nunito"));
+            },
           ),
-          Text(
-            "Teacher",
-            style: TextStyle(
-                fontSize: 14, color: Colors.white, fontFamily: "Nunito"),
-          )
+          GetX<UserController>(
+            builder: (c) {
+              return Text('${c.userModel.value.type}',
+                  style: TextStyle(
+                      fontSize: 14, color: Colors.white, fontFamily: "Nunito"));
+            },
+          ),
         ],
       ),
     );

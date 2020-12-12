@@ -4,6 +4,7 @@ import 'package:digilearn/pages/Auth/Auth.dart';
 import 'package:digilearn/pages/Home/HomeScreen.dart';
 
 import 'package:digilearn/pages/OnBoard/OnBoardingScreen.dart';
+import 'package:digilearn/pages/Profile/Profile.dart';
 import 'package:digilearn/pages/ProfileCreator/CreateInstitute.dart';
 import 'package:digilearn/pages/ProfileCreator/InstituteOption.dart';
 import 'package:digilearn/pages/ProfileCreator/JoinInstitute.dart';
@@ -26,4 +27,5 @@ final Map<String, WidgetBuilder> routes = {
   InstituteOption.routeName: (context) => InstituteOption(),
   CreateInstitute.routeName: (context) => CreateInstitute(),
   JoinInstitute.routeName: (context) => JoinInstitute(),
+  Profile.routeName: (context) => Profile(),
 };

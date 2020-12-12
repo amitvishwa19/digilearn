@@ -1,7 +1,8 @@
+import 'package:digilearn/helpers/SharePref.dart';
 import 'package:digilearn/pages/Auth/Auth.dart';
 import 'package:digilearn/pages/Home/HomeScreen.dart';
 import 'package:digilearn/pages/OnBoard/OnBoardingScreen.dart';
-//import 'package:digilearn/pages/OnBoard/Onboarding_del.dart';
+import 'package:digilearn/services/AuthService.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -18,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    Timer(Duration(seconds: 5), onboarding);
+    Timer(Duration(seconds: 5), onBoarding);
   }
 
   @override
@@ -43,20 +44,31 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  Future onboarding() async {
+  Future onBoarding() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool _obSeen = prefs.getBool('onboard_visible');
+    //bool _obSeen = prefs.getBool('onBoard_visible');
 
-    //prefs.setBool('onboard_visible', false);
-    if (_obSeen == true) {
-      bool _loginStatus = prefs.getBool('loginStatus');
-      if (_loginStatus == true) {
-        Navigator.pushNamed(context, HomeScreen.routeName);
+    bool _onBoarding = prefs.getBool('onBoarding');
+    String _token = prefs.getString('token');
+    //String oldToken = prefs.getString('token');
+    //print('Old token :- $oldToken');
+
+    //Getting refresh token
+    _token = await AuthService.refresh(_token);
+    SharePref.setString('token', _token);
+    //print('New Token:- $_token');
+
+
+    if (_onBoarding == false) {
+      //bool _isLoggedIn = prefs.getBool('isLoggedIn');
+      if (_token != null) {
+        //Navigator.pushReplacementNamed(context, Auth.routeName);
+        Navigator.pushReplacementNamed(context, HomeScreen.routeName);
       } else {
-        Navigator.pushNamed(context, Auth.routeName);
+        Navigator.pushReplacementNamed(context, Auth.routeName);
       }
     } else {
-      Navigator.pushNamed(context, OnBoardingScreen.routeName);
+      Navigator.pushReplacementNamed(context, OnBoardingScreen.routeName);
     }
   }
 }

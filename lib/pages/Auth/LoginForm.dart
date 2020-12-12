@@ -1,13 +1,11 @@
+import 'package:digilearn/controllers/AuthController.dart';
+import 'package:digilearn/helpers/SharePref.dart';
 import 'package:digilearn/pages/Home/HomeScreen.dart';
-import 'package:digilearn/widgets/default_button.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:toast/toast.dart';
+import 'package:digilearn/services/AuthService.dart';
+import 'package:digilearn/widgets/DefaultButton.dart';
+import 'package:get/get.dart';
 import 'package:digilearn/utils/theme.dart';
 import 'package:flutter/material.dart';
-//import 'package:digilearn/api/api.dart';
-import 'package:digilearn/api/api.dart';
-import 'dart:convert';
-import 'dart:async';
 
 class Login extends StatefulWidget {
   @override
@@ -20,7 +18,12 @@ class _LoginState extends State<Login> {
 
   final email = TextEditingController();
   final password = TextEditingController();
-  final _formkey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -30,51 +33,46 @@ class _LoginState extends State<Login> {
   }
 
   void validate(context) {
-    if (_formkey.currentState.validate()) {
+    if (_formKey.currentState.validate()) {
       loginClicked(context);
     }
   }
 
-  Future loginClicked(context) async {
+  loginClicked(context) async {
     setState(() {
       _isLoading = true;
     });
-
     var data = {'email': email.text, 'password': password.text};
-    var res = await LoginApi().getData(data);
-    var body = jsonDecode(res.body);
-
-    print(body);
-
-    if (body['success'] == true) {
-      SharedPreferences pref = await SharedPreferences.getInstance();
-
-      //Saving Loging status in pref
-      pref.setBool('loginStatus', true);
-
-      //Saving Token in pref
-      pref.setString('token', body['token']);
-
-      //Saving user in pref
-      pref.setString('user', jsonEncode(body['user']));
-
-      Navigator.pushNamed(context, HomeScreen.routeName);
-    } else {
-      Toast.show("Invalid Login Credentials", context,
-          duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
-    }
-
-    setState(() {
-      _isLoading = false;
-    });
+    print('Login Clicked');
+    AuthService authService = new AuthService();
+    authService.login(data).then((value) {
+      if (value.success) {
+        SharePref.setBool('isLoggedIn', true);
+        SharePref.setString('token', value.token);
+        userDetails(value.token);
+        //print(value.token);
+        Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+      } else {
+        final snackBar = SnackBar(content: Text('Invalid Login Credentials'));
+        Scaffold.of(context).showSnackBar(snackBar);
+      }
+      setState(() {
+        _isLoading = false;
+      });
+    });//Login Service Called
   }
+
+  userDetails(String _token) async {
+    final user = Get.put(UserController());
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: SingleChildScrollView(
           child: Form(
-        key: _formkey,
+        key: _formKey,
         child: Column(
           children: [
             TextFormField(

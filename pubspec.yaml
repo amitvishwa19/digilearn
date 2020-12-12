@@ -18,6 +18,8 @@ dependencies:
   toast: ^0.1.5
   font_awesome_flutter: ^8.8.0
   permission_handler: ^5.0.1
+  curved_navigation_bar:
+  get:
 
 dev_dependencies:
   flutter_test:
