@@ -1,14 +1,15 @@
 class Strings {
   Strings._();
 
-  //static const loginUrl = 'http://dev.digizigs.com//api/v1/auth/login';
-  static const loginUrl = 'http://10.0.2.2/digizigs/api/v1/auth/login';
+  //static const baseUrl = 'http://10.0.2.2/digizigs/api/v1';
+  static const baseUrl = 'http://dev.digizigs.com/api/v1';
 
-  //static const userUrl = 'http://dev.digizigs.com//api/v1/auth/login';
-  static const userUrl = 'http://10.0.2.2/digizigs/api/v1/auth/user';
-  
-  //static const userUrl = 'http://dev.digizigs.com//api/v1/auth/refresh';
-  static const refreshUrl = 'http://10.0.2.2/digizigs/api/v1/auth/refresh';
+  static const loginUrl = baseUrl + '/auth/login';
+  static const userUrl = baseUrl + '/auth/user';
+  static const refreshUrl = baseUrl + '/auth/refresh';
+  static const updateUser = baseUrl + '/auth/user/update';
+
+  static const version = '1.2.2';
 
   static const String appTitle = "DigiLearn";
   static const String introTitle =

@@ -1,5 +1,6 @@
 import 'package:digilearn/models/DrawerItems.dart';
 import 'package:digilearn/pages/Auth/Auth.dart';
+import 'package:digilearn/utils/Colors.dart';
 import 'package:digilearn/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,7 +15,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(bottom: 50),
-      color: appPrimaryColor,
+      color: primaryColor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

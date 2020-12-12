@@ -4,10 +4,12 @@ import 'package:digilearn/helpers/SharePref.dart';
 import 'package:digilearn/pages/Auth/Auth.dart';
 import 'package:digilearn/pages/Home/HomeScreen.dart';
 import 'package:digilearn/pages/Profile/EditProfile.dart';
-import 'package:digilearn/utils/Colors.dart';
+import 'package:digilearn/utils/colors.dart';
 import 'package:digilearn/utils/constants.dart';
 import 'package:digilearn/utils/strings.dart';
+import 'package:digilearn/widgets/CircleAvatar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
@@ -24,7 +26,7 @@ class Settings extends StatelessWidget {
               print(Get.find<ScreenController>().page);
               //Get.put(ScreenController()).change(0);
               //Navigator.of(context).pop();
-              Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+              Navigator.popAndPushNamed(context, HomeScreen.routeName);
               //Navigator.pushNamed(context, HomeScreen.routeName);
               //Get.put<ScreenController>().change(1);
             }),
@@ -33,77 +35,130 @@ class Settings extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: Container(
-        color: BackgroundColor,
-        padding: EdgeInsets.all(5),
-        child: Column(
-          children: [
-            new UserInfoCard(),
-            new InfoNavigationCard(
-              info: 'App Notification Settings',
-              icon: FontAwesomeIcons.bell,
-            ),
-            new InfoNavigationCard(
-              info: 'Support & Feedback',
-              icon: FontAwesomeIcons.info,
-            ),
-            new InfoNavigationCard(
-              info: 'Tell a friend about DigiLearn',
-              icon: FontAwesomeIcons.shareAlt,
-            ),
-            new InfoNavigationCard(
-              info: 'Logout',
-              icon: FontAwesomeIcons.signOutAlt,
-              callback: () {
-                print('Logout');
-                SharePref.setString('token', null);
-                SharePref.setBool('isLoggedIn', false);
-                Navigator.popAndPushNamed(context, Auth.routeName);
-              },
-            ),
-            Spacer(),
+      body: WillPopScope(
+        onWillPop: () async {
+          Get.find<ScreenController>().change(1);
+          Navigator.popAndPushNamed(context, HomeScreen.routeName);
+          return true;
+        },
+        child: Builder(
+          builder: (context) => Container(
+            color: BackgroundColor,
+            padding: EdgeInsets.all(5),
+            child: Column(
+              children: [
+                //User Info Card
+                UserInfoCard(),
 
-            //App Info Area
-            Container(
-              child: Center(
-                child: Column(
-                  children: [
-                    Container(
-                      height: 30,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage(
-                                  "assets/images/digilearn_logo.png"))),
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                //Switch Profile
+                InfoNavigationCard(
+                  info:
+                      'Switch to ${(Get.find<UserController>().userModel.value.type) == 'Student' ? 'Teacher' : 'Student'}  profile',
+                  icon: FontAwesomeIcons.syncAlt,
+                  callback: () {
+                    String _type =
+                        Get.find<UserController>().userModel.value.type;
+                    if (_type == 'Teacher') {
+                      Get.find<UserController>().updateUserType('Student');
+                      Get.find<ScreenController>().change(1);
+                      //Get.find<UserController>().userModel.value.type = 'Student';
+                      Navigator.popAndPushNamed(context, HomeScreen.routeName);
+                    } else {
+                      Get.find<UserController>().updateUserType('Teacher');
+                      Get.find<ScreenController>().change(1);
+                      //Get.find<UserController>().userModel.value.type = 'Teacher';
+                      Navigator.popAndPushNamed(context, HomeScreen.routeName);
+                    }
+
+                    final snackBar = SnackBar(
+                        content: Text(
+                            'Profile switched to ${Get.find<UserController>().userModel.value.type}'));
+                    Scaffold.of(context).showSnackBar(snackBar);
+                  },
+                ),
+
+                //App Notification Setting
+                InfoNavigationCard(
+                  info: 'App Notification Settings',
+                  icon: FontAwesomeIcons.bell,
+                ),
+
+                //Support and feedback
+                InfoNavigationCard(
+                  info: 'Support & Feedback',
+                  icon: FontAwesomeIcons.info,
+                ),
+
+                //Tell a friend
+                InfoNavigationCard(
+                  info: 'Tell a friend about DigiLearn',
+                  icon: FontAwesomeIcons.shareAlt,
+                  callback: () {
+                    share('https://flutter.dev/',
+                        'Please install this application DigiLearn for online digital learning ');
+                    //C:\Program Files\Android\Android Studio\jre\bin\keytool
+
+                    //C:\Program Files\Android\Android Studio\jre\bin\keytool -genkey -v -keystore c:\Users\amitvishwa\key.jks -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -alias key
+                  },
+                ),
+
+                //Logout
+                InfoNavigationCard(
+                  info: 'Logout',
+                  icon: FontAwesomeIcons.signOutAlt,
+                  callback: () {
+                    SharePref.setString('token', null);
+                    SharePref.setBool('isLoggedIn', false);
+                    Get.find<ScreenController>().change(1);
+                    Navigator.popAndPushNamed(context, Auth.routeName);
+                  },
+                ),
+
+                Spacer(),
+
+                //App Info Area
+                Container(
+                  child: Center(
+                    child: Column(
                       children: [
-                        Text(
-                          'Terms & Condition',
-                          style: TextStyle(color: appPrimaryColor),
+                        Container(
+                          height: 30,
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage(
+                                      "assets/images/digilearn_logo.png"))),
                         ),
-                        SizedBox(width: 4),
-                        Text('|',
-                            style: TextStyle(
-                                color: appPrimaryColor,
-                                fontWeight: FontWeight.bold)),
-                        SizedBox(width: 4),
-                        Text('Privacy Policy',
-                            style: TextStyle(color: appPrimaryColor)),
+                        SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Terms & Condition',
+                              style: TextStyle(color: primaryColor),
+                            ),
+                            SizedBox(width: 4),
+                            Text('|',
+                                style: TextStyle(
+                                    color: primaryColor,
+                                    fontWeight: FontWeight.bold)),
+                            SizedBox(width: 4),
+                            Text('Privacy Policy',
+                                style: TextStyle(color: primaryColor)),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          'Version ${Strings.version}',
+                          style: TextStyle(color: Colors.grey),
+                        )
                       ],
                     ),
-                    SizedBox(height: 10),
-                    Text(
-                      'Version ${Strings.version}',
-                      style: TextStyle(color: Colors.grey),
-                    )
-                  ],
+                  ),
                 ),
-              ),
+                SizedBox(height: 20)
+              ],
             ),
-            SizedBox(height: 20)
-          ],
+          ),
         ),
       ),
     );
@@ -134,7 +189,7 @@ class InfoNavigationCard extends StatelessWidget {
               children: [
                 Icon(
                   icon,
-                  color: appPrimaryColor,
+                  color: primaryColor,
                   size: 20,
                 ),
                 SizedBox(width: 20),
@@ -166,7 +221,6 @@ class UserInfoCard extends StatelessWidget {
             .toUpperCase();
     final String _avatar = Get.find<UserController>().userModel.value.avatarUrl;
 
-    print(Get.find<UserController>().userModel.value.avatarUrl);
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
@@ -179,21 +233,10 @@ class UserInfoCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CircleAvatar(
-                radius: 30,
-                backgroundImage: _avatar != null
-                    ? AssetImage('assets/images/monica.png')
-                    : null,
-                backgroundColor: _avatar != null ? Colors.transparent : null,
-                child: _avatar != null
-                    ? Text(
-                        '',
-                        style: TextStyle(fontSize: 20),
-                      )
-                    : Text(
-                        '$_initials',
-                        style: TextStyle(fontSize: 20),
-                      ),
+              CAvatar(
+                text: _initials,
+                url: _avatar,
+                radius: 25,
               ),
               SizedBox(width: 20),
               Column(
@@ -201,7 +244,12 @@ class UserInfoCard extends StatelessWidget {
                 children: [
                   Text(
                       '${Get.find<UserController>().userModel.value.firstname},${Get.find<UserController>().userModel.value.lastname}'),
-                  Text('${Get.find<UserController>().userModel.value.email}')
+                  Text('${Get.find<UserController>().userModel.value.email}'),
+                  GetX<UserController>(
+                      init: UserController(),
+                      builder: (_) {
+                        return Text('${_.userModel.value.type}');
+                      })
                 ],
               ),
               Spacer(),
@@ -214,7 +262,8 @@ class UserInfoCard extends StatelessWidget {
                   onPressed: () {
                     //Navigator.pop(context, EditProfile.routeName);
                     print('Edit Profile');
-                    Navigator.pushNamed(context, EditProfile.routeName);
+                    //Navigator.pushNamed(context, EditProfile.routeName);
+                    Navigator.popAndPushNamed(context, EditProfile.routeName);
                   })
             ],
           ),
@@ -222,4 +271,12 @@ class UserInfoCard extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<void> share(dynamic link, String title) async {
+  await FlutterShare.share(
+      title: 'DigiLearn',
+      text: title,
+      linkUrl: link,
+      chooserTitle: 'Share about digilearn');
 }

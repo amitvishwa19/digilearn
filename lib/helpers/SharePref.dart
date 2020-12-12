@@ -16,7 +16,7 @@ class SharePref {
     return pref.getString("login_details") != null ? true : false;
   }
 
-  //Set sare pref after loggedin
+  //Set share pref after loggedIn
   static Future<void> setLoginDetails(LoginModel model) async {
     final pref = await SharedPreferences.getInstance();
     return pref.setString(
@@ -43,7 +43,7 @@ class SharePref {
     pref.setString(key, value);
   }
 
-  Future<String> getString(String key) async {
+  static Future<String> getString(String key) async {
     final pref = await SharedPreferences.getInstance();
     return pref.getString(key);
   }

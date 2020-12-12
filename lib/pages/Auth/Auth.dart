@@ -1,3 +1,4 @@
+import 'package:digilearn/utils/colors.dart';
 import 'package:digilearn/utils/constants.dart';
 import 'package:digilearn/utils/strings.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,7 @@ class _AuthState extends State<Auth> {
 
     return Scaffold(
         body: Stack(
-      children: [
+        children: [
         //MAin Background stack
         backgroundStack(context),
 
@@ -65,7 +66,7 @@ class _AuthState extends State<Auth> {
   AnimatedContainer backgroundStack(BuildContext context) {
     return AnimatedContainer(
       duration: Duration(seconds: 2),
-      color: appPrimaryColor,
+      color: primaryColor,
       child: Column(
         children: [
           Container(
@@ -126,7 +127,7 @@ class _AuthState extends State<Auth> {
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            color: appPrimaryColor),
+                            color: primaryColor),
                       ),
                     ),
                   ],
@@ -149,7 +150,7 @@ class _AuthState extends State<Auth> {
                   child: Text(
                     "SignIn",
                     style: TextStyle(
-                        color: appPrimaryColor, fontWeight: FontWeight.bold),
+                        color: primaryColor, fontWeight: FontWeight.bold),
                   ),
                 )
               ],
@@ -187,7 +188,7 @@ class _AuthState extends State<Auth> {
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            color: appPrimaryColor),
+                            color: primaryColor),
                       ),
                     ),
                     Text(
@@ -214,7 +215,7 @@ class _AuthState extends State<Auth> {
                   child: Text(
                     "SignUp",
                     style: TextStyle(
-                        color: appPrimaryColor, fontWeight: FontWeight.bold),
+                        color: primaryColor, fontWeight: FontWeight.bold),
                   ),
                 )
               ],

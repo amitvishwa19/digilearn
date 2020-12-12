@@ -14,7 +14,6 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool _isLoading = false;
-  bool _isClicked = false;
 
   final email = TextEditingController();
   final password = TextEditingController();
@@ -42,84 +41,91 @@ class _LoginState extends State<Login> {
     setState(() {
       _isLoading = true;
     });
+
     var data = {'email': email.text, 'password': password.text};
-    print('Login Clicked');
+
     AuthService authService = new AuthService();
     authService.login(data).then((value) {
       if (value.success) {
         SharePref.setBool('isLoggedIn', true);
         SharePref.setString('token', value.token);
-        userDetails(value.token);
-        //print(value.token);
-        Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+        authService.user(value.token).then((value) {
+          Get.put(UserController()).user(value);
+
+          setState(() {
+            _isLoading = false;
+          });
+
+          Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+        });
       } else {
         final snackBar = SnackBar(content: Text('Invalid Login Credentials'));
         Scaffold.of(context).showSnackBar(snackBar);
       }
-      setState(() {
-        _isLoading = false;
-      });
-    });//Login Service Called
+
+
+    }); //Login Service Called
   }
 
-  userDetails(String _token) async {
-    final user = Get.put(UserController());
-  }
-
+  userDetails(String _token) async {}
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: SingleChildScrollView(
-          child: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            TextFormField(
-                controller: email,
-                keyboardType: TextInputType.emailAddress,
-                validator: validateEmail,
-                decoration: InputDecoration(
-                    labelText: "Email",
-                    hintText: "Email Address",
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    //errorText: "Please enter Email",
-                    suffixIcon:
-                        CustomSuffixIcon(svgIcon: "assets/icons/Mail.svg"))),
-            SizedBox(
-              height: 40,
-            ),
-            TextFormField(
-                controller: password,
-                keyboardType: TextInputType.text,
-                obscureText: true,
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Enter Password';
-                  } else {
-                    return null;
-                  }
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Container(
+        child: SingleChildScrollView(
+            child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              TextFormField(
+                  controller: email,
+                  keyboardType: TextInputType.emailAddress,
+                  validator: validateEmail,
+                  decoration: InputDecoration(
+                      labelText: "Email",
+                      hintText: "Email Address",
+                      //floatingLabelBehavior: FloatingLabelBehavior.always,
+                      //errorText: "Please enter Email",
+                      suffixIcon:
+                          CustomSuffixIcon(svgIcon: "assets/icons/Mail.svg"))),
+              SizedBox(
+                height: 40,
+              ),
+              TextFormField(
+                  controller: password,
+                  keyboardType: TextInputType.text,
+                  obscureText: true,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Enter Password';
+                    } else {
+                      return null;
+                    }
+                  },
+                  decoration: InputDecoration(
+                      labelText: "Password",
+                      hintText: "Your Password",
+                      //floatingLabelBehavior: FloatingLabelBehavior.always,
+                      suffixIcon:
+                          CustomSuffixIcon(svgIcon: "assets/icons/Lock.svg"))),
+              SizedBox(
+                height: 50,
+              ),
+              DZButton(
+                buttonText: 'Continue',
+                onClick: (){
+                  validate(context);
                 },
-                decoration: InputDecoration(
-                    labelText: "Password",
-                    hintText: "Your Password",
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    suffixIcon:
-                        CustomSuffixIcon(svgIcon: "assets/icons/Lock.svg"))),
-            SizedBox(
-              height: 60,
-            ),
-            DefaultButton(
-              text: _isLoading ? "Logging In ..." : "Continue",
-              press: () {
-                validate(context);
-                //Navigator.pushNamed(context, HomeScreen.routeName);
-                //
-              },
-            ),
-          ],
-        ),
-      )),
+                updating: _isLoading,
+              )
+            ],
+          ),
+        )),
+      ),
     );
   }
 }

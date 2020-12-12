@@ -1,13 +1,21 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:digilearn/controllers/AuthController.dart';
-import 'package:digilearn/helpers/SharePref.dart';
-import 'package:digilearn/pages/Auth/Auth.dart';
-import 'package:digilearn/pages/Profile/Profile.dart';
+import 'package:digilearn/controllers/PageController.dart';
+import 'package:digilearn/pages/Class/ClassHome.dart';
+import 'package:digilearn/pages/Settings/Settings.dart';
+import 'package:digilearn/utils/colors.dart';
 import 'package:digilearn/utils/constants.dart';
+import 'package:digilearn/widgets/CircleAvatar.dart';
 import 'package:digilearn/widgets/HomeActionIcon.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:digilearn/pages/Home/RecentActivity.dart';
+import 'package:digilearn/pages/Home/NoticeBoard.dart';
+import 'package:digilearn/pages/Home/Explore.dart';
+import 'package:digilearn/pages/Home/Support.dart';
 import 'package:get/get.dart';
+import 'package:share/share.dart';
 
 class HomeScreen extends StatefulWidget {
   static String routeName = "/home";
@@ -27,16 +35,15 @@ class _HomeScreenState extends State<HomeScreen> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
 
-    return WillPopScope(
-      onWillPop: () {
-        return Future.value(true);
-      },
-      child: Scaffold(
-          appBar: buildAppBar(),
-          body: AnimatedContainer(
+    return Scaffold(
+        appBar: buildAppBar(),
+        body: WillPopScope(
+          onWillPop: onWillPop,
+          child: AnimatedContainer(
             height: height,
             duration: Duration(milliseconds: 300),
             decoration: BoxDecoration(
+                color: BackgroundColor,
                 image:
                     DecorationImage(image: AssetImage("assets/images/bg.png"))),
             child: SingleChildScrollView(
@@ -47,152 +54,530 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: width,
                     height: 60,
                     decoration: BoxDecoration(
-                        color: !isOpened ? appPrimaryColor : Colors.red[100],
+                        color: primaryColor,
                         borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(10),
                             bottomRight: Radius.circular(10))),
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
 
-                    //Option Container
-                    child: Container(
-                      transform: Matrix4.translationValues(0, -50, 0),
-                      width: width,
-                      decoration: BoxDecoration(
-                          boxShadow: boxshadow,
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          )),
-                      child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                HomeActionIcon(
-                                  title: "Subject",
-                                  icon: FontAwesomeIcons.book,
-                                ),
-                                HomeActionIcon(
-                                  title: "Assingments",
-                                  icon: FontAwesomeIcons.lightbulb,
-                                ),
-                                HomeActionIcon(
-                                    title: "Tests",
-                                    icon: FontAwesomeIcons.stream),
-                              ],
-                            ),
-                            SizedBox(height: 15),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                HomeActionIcon(
-                                  title: "Chat",
-                                  icon: FontAwesomeIcons.comment,
-                                ),
-                                HomeActionIcon(
-                                  title: "Teachers",
-                                  icon: FontAwesomeIcons.users,
-                                ),
-                                HomeActionIcon(
-                                    title: "Notice",
-                                    icon: FontAwesomeIcons.bullhorn),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                  //Home action icon section
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Container(
-                      height: 200,
-                      width: width,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                    child: Column(
+                      children: [
+                        //Main Action icons
+                        Container(
+                          transform: Matrix4.translationValues(0, -60, 0),
+                          width: width,
+                          decoration: BoxDecoration(
+                              boxShadow: boxshadow,
+                              color: Colors.white,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              )),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 20),
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    HomeActionIcon(
+                                      title: "Class",
+                                      icon: FontAwesomeIcons.graduationCap,
+                                      onClick: () {
+                                        Navigator.pushReplacementNamed(
+                                            context, ClassHome.routeName);
+                                      },
+                                    ),
+                                    HomeActionIcon(
+                                      title: "Subject",
+                                      icon: FontAwesomeIcons.book,
+                                      onClick: () {
+                                        Fluttertoast.showToast(
+                                            msg: 'Subject is clicked');
+                                      },
+                                    ),
+                                    HomeActionIcon(
+                                      title: "Assignments",
+                                      icon: FontAwesomeIcons.lightbulb,
+                                      onClick: () {
+                                        Fluttertoast.showToast(
+                                            msg: 'Assignment is clicked');
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 15),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    HomeActionIcon(
+                                      title: "Tests",
+                                      icon: FontAwesomeIcons.stream,
+                                      onClick: () {
+                                        Fluttertoast.showToast(
+                                            msg: 'Tests is clicked');
+                                      },
+                                    ),
+                                    HomeActionIcon(
+                                      title: "Teachers",
+                                      icon: FontAwesomeIcons.users,
+                                      onClick: () {
+                                        Fluttertoast.showToast(
+                                            msg: 'Teachers is clicked');
+                                      },
+                                    ),
+                                    HomeActionIcon(
+                                      title: "Notice",
+                                      icon: FontAwesomeIcons.bullhorn,
+                                      onClick: () {
+                                        Fluttertoast.showToast(
+                                            msg: 'Notice is clicked');
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        //Recent activity
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushReplacementNamed(
+                                context, RecentActivity.routeName);
+                          },
+                          child: Container(
+                            transform: Matrix4.translationValues(0, -40, 0),
+                            child: Column(
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Recent Activity',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                ),
+                                SizedBox(height: 5),
+                                Container(
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                      boxShadow: boxshadow,
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+                                      )),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Row(
+                                      //mainAxisAlignment:MainAxisAlignment.start ,
+                                      //crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          height: 50,
+                                          width: 50,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(50)),
+                                            color: primaryColor,
+                                          ),
+                                          child: Center(
+                                            child: Icon(
+                                              FontAwesomeIcons.stream,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 20),
+                                        Container(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Maths Test',
+                                                style: TextStyle(fontSize: 18),
+                                              ),
+                                              Text(
+                                                '04.40 PM',
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Colors.grey),
+                                              ),
+                                              SizedBox(height: 10),
+                                              Text(
+                                                'Status:Completed',
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Colors.grey),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Spacer(),
+                                        Container(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  color: Colors.yellow,
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(10)),
+                                                ),
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(5),
+                                                  child: Container(
+                                                    child: Text('6 Dec'),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        //Notice board
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushReplacementNamed(
+                                context, NoticeBoard.routeName);
+                          },
+                          child: Container(
+                            width: width,
+                            transform: Matrix4.translationValues(0, -20, 0),
+                            decoration: BoxDecoration(
+                                boxShadow: boxshadow,
+                                color: noticeBoard,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Column(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text('Notice Board',
+                                        style: TextStyle(fontSize: 18),
+                                        textAlign: TextAlign.left),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        height: 50,
+                                        width: 50,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(50)),
+                                          color: primaryColor,
+                                        ),
+                                        child: Center(
+                                          child: Icon(
+                                            FontAwesomeIcons.file,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 20),
+                                      Expanded(
+                                        child: Text(
+                                          'Access all important announcement,notices and circulars here',
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        //Support and feedback
+                        Container(
+                          //height: 140,
+                          width: width,
+                          transform: Matrix4.translationValues(0, 0, 0),
+                          decoration: BoxDecoration(
+                              boxShadow: boxshadow,
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(10),
+                                child: Container(
+                                  child: Column(
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text('Support & Feedback',
+                                            style: TextStyle(fontSize: 18),
+                                            textAlign: TextAlign.left),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                            'Share your feedback and suggestions',
+                                            style: TextStyle(fontSize: 16),
+                                            textAlign: TextAlign.left),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                height: 1,
+                                color: Colors.grey,
+                              ),
+                              Container(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        Share.share(
+                                            'check out my website https://example.com',
+                                            subject: 'Look what I made!');
+                                      },
+                                      child: Container(
+                                        child: Row(
+                                          children: [
+                                            Icon(FontAwesomeIcons.envelope),
+                                            SizedBox(width: 10),
+                                            Text('Write to DigiLearn',
+                                                style: TextStyle(
+                                                    color: primaryColor))
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: 1,
+                                      height: 60,
+                                      color: Colors.grey,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushReplacementNamed(
+                                            context, Support.routeName);
+                                      },
+                                      child: Container(
+                                        child: Row(
+                                          children: [
+                                            Icon(FontAwesomeIcons
+                                                .questionCircle),
+                                            SizedBox(width: 10),
+                                            Text('Support & Faq\'s',
+                                                style: TextStyle(
+                                                    color: primaryColor)),
+                                            SizedBox(width: 20),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+
+                        //Explore more
+                        Container(
+                          width: width,
+                          transform: Matrix4.translationValues(0, 20, 0),
+                          decoration: BoxDecoration(
+                              boxShadow: boxshadow,
+                              color: getMore,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: Row(
+                            children: [
+                              Container(
+                                child: Padding(
+                                  padding: EdgeInsets.all(20),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      RichText(
+                                        text: TextSpan(
+                                          // Note: Styles for TextSpans must be explicitly defined.
+                                          // Child text spans will inherit styles from parent
+                                          style: TextStyle(
+                                            fontSize: 24.0,
+                                            color: Colors.black,
+                                          ),
+                                          children: <TextSpan>[
+                                            TextSpan(text: 'Get'),
+                                            TextSpan(
+                                                text: ' more',
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      RichText(
+                                        text: TextSpan(
+                                          // Note: Styles for TextSpans must be explicitly defined.
+                                          // Child text spans will inherit styles from parent
+                                          style: TextStyle(
+                                            fontSize: 24.0,
+                                            color: Colors.black,
+                                          ),
+                                          children: <TextSpan>[
+                                            TextSpan(text: 'from'),
+                                            TextSpan(
+                                                text: ' DigiLearn',
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(height: 10),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            color: primaryColor,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10))),
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 10, horizontal: 10),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.pushReplacementNamed(
+                                                  context, Explore.routeName);
+                                            },
+                                            child: Container(
+                                              child: Text(
+                                                'Explore Now',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 18),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                child: Container(
+                                  height: 180,
+                                  width: 180,
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image: AssetImage(
+                                              'assets/images/splash_bg_2.png'))),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 40)
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
           ),
-          bottomNavigationBar: CurvedNavigationBar(
-            height: 50.0,
-            backgroundColor: Colors.white,
-            color: appPrimaryColor,
-            items: [
-              Icon(
-                Icons.verified_user,
-                size: 20,
-                color: Colors.white,
-              ),
-              Icon(Icons.verified_user, size: 20, color: Colors.white),
-              Icon(Icons.home, size: 20, color: Colors.white),
-              Icon(FontAwesomeIcons.user, size: 20, color: Colors.white),
-              Icon(FontAwesomeIcons.powerOff, size: 20, color: Colors.white),
-            ],
-            animationDuration: Duration(microseconds: 300),
-            animationCurve: Curves.bounceInOut,
-            index: 2,
-            onTap: (index) {
-              if (index == 2) {
-                print('Home Page');
-              } else if (index == 3) {
-                Navigator.pushNamed(context, Profile.routeName);
-              } else if (index == 4) {
-                SharePref.setString('token', null);
-                Navigator.pushReplacementNamed(context, Auth.routeName);
-              }
-            },
-          )),
-    );
+        ),
+
+        //Bottom Navigation bar
+        bottomNavigationBar: CurvedNavigationBar(
+          height: 50.0,
+          backgroundColor: Colors.transparent,
+          color: primaryColor,
+          items: [
+            Icon(FontAwesomeIcons.bell, size: 20, color: Colors.white),
+            Icon(Icons.home, size: 20, color: Colors.white),
+            Icon(FontAwesomeIcons.cog, size: 20, color: Colors.white),
+          ],
+          animationDuration: Duration(microseconds: 300),
+          animationCurve: Curves.bounceInOut,
+          index: Get.put(ScreenController()).page,
+          onTap: (index) {
+            if (index == 1) {
+              print('Home Page');
+            } else if (index == 0) {
+              print('0 clicked');
+            } else if (index == 2) {
+              //print(Get.find<ScreenController>().change(2));
+              Get.find<ScreenController>().change(2);
+              //print(Get.find<ScreenController>().page);
+              //Navigator.pushNamed(context, Profile.routeName);
+              Navigator.popAndPushNamed(context, Settings.routeName);
+            }
+          },
+        ));
   }
 
   AppBar buildAppBar() {
-    final userController = Get.put(UserController());
+    String _avatar = Get.find<UserController>().userModel.value.avatarUrl;
+    final String _initials =
+        (Get.find<UserController>().userModel.value.firstname[0] +
+                Get.find<UserController>().userModel.value.lastname[0])
+            .toUpperCase();
     return AppBar(
-      leading: CircleAvatar(
-        radius: 10,
-        backgroundImage: NetworkImage(
-            'https://cdn3.iconfinder.com/data/icons/minicons-for-web-sites/24/minicons2-14-512.png'),
-        backgroundColor: Colors.green,
-        child: Text(
-          'AV',
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-        ),
-      ),
       actions: [
-        IconButton(
-            icon: Icon(Icons.notifications),
-            color: Colors.white,
-            onPressed: () {}),
+        CAvatar(radius: 20, url: _avatar, text: _initials),
+        SizedBox(
+          width: 20,
+        )
       ],
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          GetX<UserController>(
-            builder: (c) {
-              return Text(
-                  '${c.userModel.value.firstname},${c.userModel.value.lastname}',
-                  style: TextStyle(
-                      fontSize: 16, color: Colors.white, fontFamily: "Nunito"));
-            },
-          ),
-          GetX<UserController>(
-            builder: (c) {
-              return Text('${c.userModel.value.type}',
-                  style: TextStyle(
-                      fontSize: 14, color: Colors.white, fontFamily: "Nunito"));
-            },
-          ),
+          Text(
+              '${Get.find<UserController>().userModel.value.firstname},${Get.find<UserController>().userModel.value.lastname}',
+              style: TextStyle(
+                  fontSize: 16, color: Colors.white, fontFamily: "Nunito")),
+          Text('${Get.find<UserController>().userModel.value.type}',
+              style: TextStyle(
+                  fontSize: 14, color: Colors.white, fontFamily: "Nunito")),
         ],
       ),
     );
+  }
+
+  DateTime currentBackPressTime;
+  Future<bool> onWillPop() {
+    DateTime now = DateTime.now();
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime) > Duration(seconds: 2)) {
+      currentBackPressTime = now;
+      Fluttertoast.showToast(msg: 'Press again to exit application');
+      return Future.value(false);
+    }
+    return Future.value(true);
   }
 }

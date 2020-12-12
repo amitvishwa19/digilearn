@@ -1,3 +1,4 @@
+import 'package:digilearn/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -21,7 +22,7 @@ TextTheme textTheme() {
 
 AppBarTheme appBarTheme() {
   return AppBarTheme(
-    color: appPrimaryColor,
+    color: primaryColor,
     elevation: 0,
     brightness: Brightness.dark,
     iconTheme: IconThemeData(color: Colors.white),
@@ -36,7 +37,7 @@ InputDecorationTheme inputDecorationTheme() {
       borderSide: BorderSide(color: kTextColor),
       gapPadding: 10);
   return InputDecorationTheme(
-      contentPadding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       enabledBorder: outlineInputBorder,
       focusedBorder: outlineInputBorder,
       border: outlineInputBorder);

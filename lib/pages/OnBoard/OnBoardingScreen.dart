@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:digilearn/pages/Auth/Auth.dart';
+import 'package:digilearn/utils/colors.dart';
 import 'package:digilearn/utils/constants.dart';
 import 'package:digilearn/utils/strings.dart';
 import 'package:flutter/material.dart';
@@ -112,7 +113,7 @@ class _BodyState extends State<Body> {
                 child: Container(
                     width: MediaQuery.of(context).size.width,
                     padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                    decoration: BoxDecoration(color: appPrimaryColor),
+                    decoration: BoxDecoration(color: primaryColor),
                     child: Text(
                       "Get Started now",
                       style: TextStyle(color: Colors.white),
@@ -130,7 +131,7 @@ class _BodyState extends State<Body> {
       height: 8,
       width: currentPage == index ? 20 : 10,
       decoration: BoxDecoration(
-          color: currentPage == index ? appPrimaryColor : Color(0xFFD8D8D8),
+          color: currentPage == index ? primaryColor : Color(0xFFD8D8D8),
           borderRadius: BorderRadius.circular(3)),
     );
   }
@@ -155,7 +156,7 @@ class OnBoardContent extends StatelessWidget {
             style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
-                color: appPrimaryColor),
+                color: primaryColor),
           ),
         ),
         Container(

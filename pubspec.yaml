@@ -20,6 +20,11 @@ dependencies:
   permission_handler: ^5.0.1
   curved_navigation_bar:
   get:
+  image_picker:
+  cached_network_image:
+  fluttertoast:
+  flutter_share:
+  share:
 
 dev_dependencies:
   flutter_test:

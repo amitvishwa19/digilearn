@@ -17,7 +17,8 @@ const greenColor = Color(0xff32a05f);
 const darkgreenColor = Color(0xff279152);
 
 const digicolor = Color(0xffD71D4E);
-const appPrimaryColor = Color(0xffD71D4E);
+//const appPrimaryColor = Color(0xffD71D4E);
+//const appPrimaryColor = Color(0xffF93C64);
 
 final headingStyle = TextStyle(
   fontSize: getProportionateScreenWidth(28),
@@ -51,26 +52,26 @@ const String kNamelNullError = "Please Enter your name";
 const String kPhoneNumberNullError = "Please Enter your phone number";
 const String kAddressNullError = "Please Enter your address";
 
-final otpInputDecoration = InputDecoration(
-  contentPadding:
-      EdgeInsets.symmetric(vertical: getProportionateScreenWidth(15)),
-  border: outlineInputBorder(),
-  focusedBorder: outlineInputBorder(),
-  enabledBorder: outlineInputBorder(),
-);
+// final otpInputDecoration = InputDecoration(
+//   contentPadding:
+//       EdgeInsets.symmetric(vertical: getProportionateScreenWidth(15)),
+//   border: outlineInputBorder(),
+//   focusedBorder: outlineInputBorder(),
+//   enabledBorder: outlineInputBorder(),
+// );
 
-OutlineInputBorder outlineInputBorder() {
-  return OutlineInputBorder(
-    borderRadius: BorderRadius.circular(getProportionateScreenWidth(15)),
-    borderSide: BorderSide(color: kTextColor),
-  );
-}
+// OutlineInputBorder outlineInputBorder() {
+//   return OutlineInputBorder(
+//     borderRadius: BorderRadius.circular(getProportionateScreenWidth(15)),
+//     borderSide: BorderSide(color: kTextColor),
+//   );
+// }
 
 List<BoxShadow> boxshadow = [
   BoxShadow(
-        color: Colors.grey.withOpacity(0.5),
-        spreadRadius: 5,
-        blurRadius: 7,
-        offset: Offset(0, 3), // changes position of shadow
-      ),
+    color: Colors.grey.withOpacity(0.2),
+    spreadRadius: 2,
+    blurRadius: 4,
+    offset: Offset(0, 3), // changes position of shadow
+  ),
 ];

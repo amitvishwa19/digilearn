@@ -8,7 +8,7 @@ class ScreenController extends GetxController {
     update();
   }
 
-  incriment() {
+  increment() {
     page++; //= id;
     update();
   }

@@ -1,10 +1,13 @@
+import 'package:digilearn/controllers/AuthController.dart';
 import 'package:digilearn/helpers/SharePref.dart';
 import 'package:digilearn/pages/Auth/Auth.dart';
 import 'package:digilearn/pages/Home/HomeScreen.dart';
 import 'package:digilearn/pages/OnBoard/OnBoardingScreen.dart';
 import 'package:digilearn/services/AuthService.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'dart:async';
+import 'package:digilearn/helpers/SharePref.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,8 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
-    Timer(Duration(seconds: 5), onBoarding);
+    onBoarding();
   }
 
   @override
@@ -31,13 +33,36 @@ class _SplashScreenState extends State<SplashScreen> {
         decoration: BoxDecoration(
             image: DecorationImage(image: AssetImage("assets/images/bg.png"))),
         child: Center(
-          child: AnimatedContainer(
-            duration: Duration(seconds: 2),
-            height: 200,
-            width: 200,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("assets/images/Digilearn.png"))),
+          child: Row(
+            // duration: Duration(seconds: 2),
+            // height: 200,
+            // width: 200,
+            // decoration: BoxDecoration(
+            //     image: DecorationImage(
+            //         image: AssetImage("assets/images/digilearn_logo.png"))),
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                height: 30,
+                width: 30,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/digilearn_fevi.png')
+                  )
+                ),
+              ),
+              SizedBox(width: 5),
+              Container(
+                transform: Matrix4.translationValues(0, 2, 0),
+                height: 30,
+                width: 150,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage('assets/images/digilearn_text.png')
+                    )
+                ),
+              )
+            ],
           ),
         ),
       ),
@@ -49,6 +74,7 @@ class _SplashScreenState extends State<SplashScreen> {
     //bool _obSeen = prefs.getBool('onBoard_visible');
 
     bool _onBoarding = prefs.getBool('onBoarding');
+
     String _token = prefs.getString('token');
     //String oldToken = prefs.getString('token');
     //print('Old token :- $oldToken');
@@ -56,14 +82,16 @@ class _SplashScreenState extends State<SplashScreen> {
     //Getting refresh token
     _token = await AuthService.refresh(_token);
     SharePref.setString('token', _token);
-    //print('New Token:- $_token');
-
 
     if (_onBoarding == false) {
       //bool _isLoggedIn = prefs.getBool('isLoggedIn');
       if (_token != null) {
-        //Navigator.pushReplacementNamed(context, Auth.routeName);
-        Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+        AuthService authService = new AuthService();
+        authService.user(_token).then((value) {
+          Get.put(UserController()).user(value);
+          Navigator.popAndPushNamed(context, HomeScreen.routeName);
+        });
+        //Navigator.pushReplacementNamed(context, HomeScreen.routeName);
       } else {
         Navigator.pushReplacementNamed(context, Auth.routeName);
       }
