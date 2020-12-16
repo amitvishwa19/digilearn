@@ -104,11 +104,11 @@ class AuthService {
   }
 
   //Update User
-  Future<UserModel> updateUser(data, token, image , avatar) async {
+  Future<UserModel> updateUser(data, token, image, avatar) async {
     var _url = Strings.updateUser;
     var _token = token;
     var _data = data;
-    var  userModel;
+    var userModel;
     //print(data);
     //print(image.path);
 
@@ -123,7 +123,6 @@ class AuthService {
 
     //Check if image is selected or not
     if (image != null) {
-
       request.files
           .add(await http.MultipartFile.fromPath('avatar', image.path));
     }
@@ -132,6 +131,7 @@ class AuthService {
       "firstname": data['firstname'],
       "lastname": data['lastname'],
       "email": data['email'],
+      "type": data['type'],
       "avatar": avatar == null ? 'remove' : avatar
     });
 

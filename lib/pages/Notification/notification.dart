@@ -5,11 +5,10 @@ import 'package:digilearn/utils/colors.dart';
 import 'package:digilearn/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
-class Support extends StatelessWidget {
-  static String routeName = "/support";
-  const Support({Key key}) : super(key: key);
+class Notifications extends StatelessWidget {
+  static String routeName = "/notifications";
+  const Notifications({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +21,11 @@ class Support extends StatelessWidget {
               print(Get.find<ScreenController>().page);
               Navigator.popAndPushNamed(context, HomeScreen.routeName);
             }),
-        title: Text('Help Center', style: TextStyle(color: Colors.white)),
+        title: Text('Notifications', style: TextStyle(color: Colors.white)),
       ),
       body: WillPopScope(
         onWillPop: () async {
+          Get.find<ScreenController>().change(1);
           Navigator.popAndPushNamed(context, HomeScreen.routeName);
           return true;
         },
@@ -34,11 +34,8 @@ class Support extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
               color: backgroundColor,
-              image:
-                  DecorationImage(image: AssetImage("assets/images/bg.png"))),
-          child: WebView(
-            initialUrl: Strings.appSupport,
-          ),
+              image: DecorationImage(
+                  image: AssetImage(Strings.pageBackgroundImage))),
         ),
       ),
     );

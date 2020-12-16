@@ -1,7 +1,7 @@
-import 'package:digilearn/controllers/AuthController.dart';
 import 'package:digilearn/helpers/SharePref.dart';
-import 'package:digilearn/pages/Home/HomeScreen.dart';
+import 'package:digilearn/pages/Home/homeScreen.dart';
 import 'package:digilearn/services/AuthService.dart';
+import 'package:digilearn/services/userService.dart';
 import 'package:digilearn/widgets/DefaultButton.dart';
 import 'package:get/get.dart';
 import 'package:digilearn/utils/theme.dart';
@@ -62,8 +62,6 @@ class _LoginState extends State<Login> {
         final snackBar = SnackBar(content: Text('Invalid Login Credentials'));
         Scaffold.of(context).showSnackBar(snackBar);
       }
-
-
     }); //Login Service Called
   }
 
@@ -117,7 +115,7 @@ class _LoginState extends State<Login> {
               ),
               DZButton(
                 buttonText: 'Continue',
-                onClick: (){
+                onClick: () {
                   validate(context);
                 },
                 updating: _isLoading,

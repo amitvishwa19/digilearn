@@ -1,13 +1,12 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:digilearn/controllers/AuthController.dart';
 import 'package:digilearn/pages/Settings/Settings.dart';
 import 'package:digilearn/services/AuthService.dart';
+import 'package:digilearn/services/userService.dart';
 import 'package:digilearn/utils/colors.dart';
 import 'package:digilearn/widgets/DefaultButton.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:digilearn/helpers/SharePref.dart';
@@ -27,12 +26,11 @@ class EditProfile extends StatelessWidget {
         title: Text('Edit Profile', style: TextStyle(color: Colors.white)),
       ),
       body: WillPopScope(
-          onWillPop:()async{
+          onWillPop: () async {
             Navigator.popAndPushNamed(context, Settings.routeName);
             return true;
           },
-          child: EditProfilePage()
-      ),
+          child: EditProfilePage()),
     );
   }
 }
@@ -43,11 +41,11 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-
   var _image;
   final picker = ImagePicker();
   bool showPassword = true;
   bool _isUpdating = false;
+  String userType = Get.find<UserController>().userModel.value.type;
 
   final firstname = TextEditingController(
       text: '${Get.find<UserController>().userModel.value.firstname}');
@@ -60,7 +58,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       (Get.find<UserController>().userModel.value.firstname[0] +
               Get.find<UserController>().userModel.value.lastname[0])
           .toUpperCase();
-  var  _avatar = Get.find<UserController>().userModel.value.avatarUrl;
+  String _avatar = Get.find<UserController>().userModel.value.avatarUrl;
   //final password = TextEditingController(text: '${Get.find<UserController>().userModel.value.f}');
 
   //Delete profile image
@@ -69,8 +67,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
       _avatar = null;
       _image = null;
     });
-
   }
+
   //Image picker from Camera
   Future _imageFromCamera() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
@@ -82,6 +80,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       }
     });
   }
+
   //Image Picker from Gallery
   Future _imageFromGallery() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
@@ -97,7 +96,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   //On User Update Click
   updateUser() async {
-
     setState(() {
       _isUpdating = true;
     });
@@ -106,7 +104,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
     var data = {
       'firstname': firstname.text,
       'lastname': lastname.text,
-      'email': email.text
+      'email': email.text,
+      'type': userType
     };
     //print(data);
 
@@ -119,8 +118,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
       Get.put(UserController()).userModel.value.firstname = firstname.text;
       Get.put(UserController()).userModel.value.lastname = lastname.text;
+      Get.put(UserController()).userModel.value.type = userType;
 
-      if(_avatar == null){
+      if (_avatar == null) {
         Get.find<UserController>().userModel.value.avatarUrl = null;
       }
 
@@ -128,6 +128,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       Scaffold.of(context).showSnackBar(snackBar);
     });
   }
+
   //Circle avatar Profile Phpte
   profilePhoto() {
     if (_image == null) {
@@ -140,6 +141,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       return FileImage(File(_image.path));
     }
   }
+
   //Circle avatar text
   profileText() {
     if (_image == null) {
@@ -198,6 +200,28 @@ class _EditProfilePageState extends State<EditProfilePage> {
             buildTextField('First Name', false, firstname, 1),
             buildTextField('Last Name', false, lastname, 1),
             buildTextField('Email', false, email, 1),
+            Row(
+              children: [
+                Radio(
+                    value: 'student',
+                    groupValue: userType,
+                    onChanged: (val) {
+                      userType = val;
+                      setState(() {});
+                    }),
+                Text('Student'),
+                SizedBox(width: 20),
+                Radio(
+                    value: 'teacher',
+                    groupValue: userType,
+                    onChanged: (val) {
+                      userType = val;
+                      setState(() {});
+                    }),
+                Text('Teacher')
+              ],
+            ),
+            SizedBox(height: 20),
             buildTextField('About Me', false, details, 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -205,9 +229,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 //Save Button
                 DZButton(
                   buttonText: 'Update',
-                  onClick: (){
-                      updateUser();
-                    },
+                  onClick: () {
+                    updateUser();
+                  },
                   updating: _isUpdating,
                 )
               ],
@@ -231,7 +255,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 padding: EdgeInsets.all(10),
                 child: Wrap(
                   children: [
-                    Text('Profile Photo',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700)),
+                    Text('Profile Photo',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w700)),
                     SizedBox(height: 50),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -242,18 +268,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               height: 40,
                               width: 40,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                color: primaryColor
-                              ),
-                              child: IconButton(icon: Icon(Icons.delete,color: Colors.white,), onPressed: (){
-                                _imageDelete();
-                                Navigator.of(context).pop();
-                              }),
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: primaryColor),
+                              child: IconButton(
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    _imageDelete();
+                                    Navigator.of(context).pop();
+                                  }),
                             ),
                             Text('Remove'),
                           ],
                         ),
-
                         Column(
                           children: [
                             Container(
@@ -261,17 +290,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               width: 40,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(50),
-                                  color: primaryColor
-                              ),
-                              child: IconButton(icon: Icon(Icons.photo_camera,color: Colors.white,), onPressed: (){
-                                _imageFromCamera();
-                                Navigator.of(context).pop();
-                              }),
+                                  color: primaryColor),
+                              child: IconButton(
+                                  icon: Icon(
+                                    Icons.photo_camera,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    _imageFromCamera();
+                                    Navigator.of(context).pop();
+                                  }),
                             ),
                             Text('Camera'),
                           ],
                         ),
-
                         Column(
                           children: [
                             Container(
@@ -279,12 +311,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               width: 40,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(50),
-                                  color: primaryColor
-                              ),
-                              child: IconButton(icon: Icon(Icons.photo_library,color: Colors.white,), onPressed: (){
-                                _imageFromGallery();
-                                Navigator.of(context).pop();
-                              }),
+                                  color: primaryColor),
+                              child: IconButton(
+                                  icon: Icon(
+                                    Icons.photo_library,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    _imageFromGallery();
+                                    Navigator.of(context).pop();
+                                  }),
                             ),
                             Text('Gallery'),
                           ],
@@ -302,7 +338,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget buildTextField(String label, bool isPassword,
       TextEditingController controller, int maxLine) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 30),
+      padding: EdgeInsets.only(bottom: 20),
       child: TextField(
         //minLines: 10,
 

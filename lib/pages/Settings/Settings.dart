@@ -1,9 +1,9 @@
-import 'package:digilearn/controllers/AuthController.dart';
 import 'package:digilearn/controllers/PageController.dart';
 import 'package:digilearn/helpers/SharePref.dart';
 import 'package:digilearn/pages/Auth/Auth.dart';
 import 'package:digilearn/pages/Home/HomeScreen.dart';
 import 'package:digilearn/pages/Profile/EditProfile.dart';
+import 'package:digilearn/services/userService.dart';
 import 'package:digilearn/utils/colors.dart';
 import 'package:digilearn/utils/constants.dart';
 import 'package:digilearn/utils/strings.dart';
@@ -43,7 +43,7 @@ class Settings extends StatelessWidget {
         },
         child: Builder(
           builder: (context) => Container(
-            color: BackgroundColor,
+            color: backgroundColor,
             padding: EdgeInsets.all(5),
             child: Column(
               children: [

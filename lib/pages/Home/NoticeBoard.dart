@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:digilearn/pages/Home/HomeScreen.dart';
+import 'package:digilearn/pages/Home/homeScreen.dart';
 import 'package:digilearn/controllers/PageController.dart';
 import 'package:digilearn/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +31,7 @@ class NoticeBoard extends StatelessWidget {
         child: Container(
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
-              color: BackgroundColor,
+              color: backgroundColor,
               image:
                   DecorationImage(image: AssetImage("assets/images/bg.png"))),
         ),

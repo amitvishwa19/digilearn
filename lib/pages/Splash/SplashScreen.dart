@@ -1,14 +1,12 @@
-import 'package:digilearn/controllers/AuthController.dart';
 import 'package:digilearn/helpers/SharePref.dart';
 import 'package:digilearn/pages/Auth/Auth.dart';
 import 'package:digilearn/pages/Home/HomeScreen.dart';
 import 'package:digilearn/pages/OnBoard/OnBoardingScreen.dart';
 import 'package:digilearn/services/AuthService.dart';
+import 'package:digilearn/services/userService.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:async';
-import 'package:digilearn/helpers/SharePref.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -46,10 +44,8 @@ class _SplashScreenState extends State<SplashScreen> {
                 height: 30,
                 width: 30,
                 decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/digilearn_fevi.png')
-                  )
-                ),
+                    image: DecorationImage(
+                        image: AssetImage('assets/images/digilearn_fevi.png'))),
               ),
               SizedBox(width: 5),
               Container(
@@ -58,9 +54,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 width: 150,
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage('assets/images/digilearn_text.png')
-                    )
-                ),
+                        image: AssetImage('assets/images/digilearn_text.png'))),
               )
             ],
           ),

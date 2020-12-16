@@ -25,6 +25,7 @@ dependencies:
   fluttertoast:
   flutter_share:
   share:
+  webview_flutter:
 
 dev_dependencies:
   flutter_test:

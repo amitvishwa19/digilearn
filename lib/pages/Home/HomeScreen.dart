@@ -1,8 +1,12 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:digilearn/controllers/AuthController.dart';
 import 'package:digilearn/controllers/PageController.dart';
-import 'package:digilearn/pages/Class/ClassHome.dart';
+import 'package:digilearn/pages/Class/classesHome.dart';
+import 'package:digilearn/pages/Home/explore.dart';
+import 'package:digilearn/pages/Home/recentActivity.dart';
+import 'package:digilearn/pages/Home/support.dart';
 import 'package:digilearn/pages/Settings/Settings.dart';
+import 'package:digilearn/pages/notification/notification.dart';
+import 'package:digilearn/services/userService.dart';
 import 'package:digilearn/utils/colors.dart';
 import 'package:digilearn/utils/constants.dart';
 import 'package:digilearn/widgets/CircleAvatar.dart';
@@ -10,12 +14,10 @@ import 'package:digilearn/widgets/HomeActionIcon.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:digilearn/pages/Home/RecentActivity.dart';
-import 'package:digilearn/pages/Home/NoticeBoard.dart';
-import 'package:digilearn/pages/Home/Explore.dart';
-import 'package:digilearn/pages/Home/Support.dart';
 import 'package:get/get.dart';
 import 'package:share/share.dart';
+
+import 'noticeBoard.dart';
 
 class HomeScreen extends StatefulWidget {
   static String routeName = "/home";
@@ -43,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
             height: height,
             duration: Duration(milliseconds: 300),
             decoration: BoxDecoration(
-                color: BackgroundColor,
+                color: backgroundColor,
                 image:
                     DecorationImage(image: AssetImage("assets/images/bg.png"))),
             child: SingleChildScrollView(
@@ -84,14 +86,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
+                                    //Class Icon
                                     HomeActionIcon(
                                       title: "Class",
                                       icon: FontAwesomeIcons.graduationCap,
                                       onClick: () {
+                                        var type = Get.find<UserController>()
+                                            .userModel
+                                            .value
+                                            .type;
+
+                                        print(type);
+
                                         Navigator.pushReplacementNamed(
-                                            context, ClassHome.routeName);
+                                            context, ClassesHome.routeName);
                                       },
                                     ),
+
+                                    //Subject
                                     HomeActionIcon(
                                       title: "Subject",
                                       icon: FontAwesomeIcons.book,
@@ -100,6 +112,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                             msg: 'Subject is clicked');
                                       },
                                     ),
+
+                                    //Assignment
                                     HomeActionIcon(
                                       title: "Assignments",
                                       icon: FontAwesomeIcons.lightbulb,
@@ -115,6 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
+                                    //Test
                                     HomeActionIcon(
                                       title: "Tests",
                                       icon: FontAwesomeIcons.stream,
@@ -123,6 +138,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                             msg: 'Tests is clicked');
                                       },
                                     ),
+
+                                    //Teacher
                                     HomeActionIcon(
                                       title: "Teachers",
                                       icon: FontAwesomeIcons.users,
@@ -131,6 +148,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                             msg: 'Teachers is clicked');
                                       },
                                     ),
+
+                                    //Notice
                                     HomeActionIcon(
                                       title: "Notice",
                                       icon: FontAwesomeIcons.bullhorn,
@@ -515,7 +534,7 @@ class _HomeScreenState extends State<HomeScreen> {
         //Bottom Navigation bar
         bottomNavigationBar: CurvedNavigationBar(
           height: 50.0,
-          backgroundColor: Colors.transparent,
+          backgroundColor: backgroundColor,
           color: primaryColor,
           items: [
             Icon(FontAwesomeIcons.bell, size: 20, color: Colors.white),
@@ -526,10 +545,11 @@ class _HomeScreenState extends State<HomeScreen> {
           animationCurve: Curves.bounceInOut,
           index: Get.put(ScreenController()).page,
           onTap: (index) {
-            if (index == 1) {
-              print('Home Page');
-            } else if (index == 0) {
-              print('0 clicked');
+            if (index == 0) {
+              Get.find<ScreenController>().change(0);
+              Navigator.popAndPushNamed(context, Notifications.routeName);
+            } else if (index == 1) {
+              print('1 clicked');
             } else if (index == 2) {
               //print(Get.find<ScreenController>().change(2));
               Get.find<ScreenController>().change(2);
@@ -542,6 +562,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   AppBar buildAppBar() {
+    String _firstName = Get.find<UserController>().userModel.value.firstname;
+    String _lastName = Get.find<UserController>().userModel.value.lastname;
+    String _type = Get.find<UserController>().userModel.value.type;
     String _avatar = Get.find<UserController>().userModel.value.avatarUrl;
     final String _initials =
         (Get.find<UserController>().userModel.value.firstname[0] +
@@ -558,10 +581,10 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-              '${Get.find<UserController>().userModel.value.firstname},${Get.find<UserController>().userModel.value.lastname}',
+              '${_firstName[0].toUpperCase() + _firstName.substring(1)},${_lastName[0].toUpperCase() + _lastName.substring(1)}',
               style: TextStyle(
                   fontSize: 16, color: Colors.white, fontFamily: "Nunito")),
-          Text('${Get.find<UserController>().userModel.value.type}',
+          Text(_type[0].toUpperCase() + _type.substring(1),
               style: TextStyle(
                   fontSize: 14, color: Colors.white, fontFamily: "Nunito")),
         ],

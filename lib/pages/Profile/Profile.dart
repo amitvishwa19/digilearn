@@ -2,7 +2,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:digilearn/controllers/PageController.dart';
 import 'package:digilearn/helpers/SharePref.dart';
 import 'package:digilearn/pages/Auth/Auth.dart';
-import 'package:digilearn/pages/Home/HomeScreen.dart';
+import 'package:digilearn/pages/Home/homeScreen.dart';
 import 'package:digilearn/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
