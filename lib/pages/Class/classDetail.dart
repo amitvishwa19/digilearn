@@ -1,8 +1,9 @@
 import 'dart:ui';
+import 'package:digilearn/services/ClassroomService.dart';
+import 'package:digilearn/services/userService.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:digilearn/controllers/PageController.dart';
 import 'package:digilearn/pages/Class/classesHome.dart';
-import 'package:digilearn/services/classService.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'classDetailPages/overview.dart' as overview;
@@ -22,10 +23,12 @@ class ClassDetail extends StatefulWidget {
 class _ClassDetailState extends State<ClassDetail>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
+  final String _type = Get.find<UserController>().userModel.value.type;
 
   @override
   void initState() {
-    _tabController = new TabController(length: 6, vsync: this);
+    _tabController =
+        new TabController(length: _type == 'teacher' ? 6 : 4, vsync: this);
     super.initState();
   }
 
@@ -45,10 +48,10 @@ class _ClassDetailState extends State<ClassDetail>
               Get.find<ScreenController>().change(1);
               Navigator.popAndPushNamed(context, ClassesHome.routeName);
             }),
-        title: Text(Get.find<ClassController>().selectedClass.toString(),
+        title: Text(Get.find<ClassController>().classModel.value.name,
             style: TextStyle(color: Colors.white)),
         bottom: TabBar(
-          isScrollable: true,
+          isScrollable: _type == 'teacher' ? true : false,
           tabs: [
             Tab(
               icon: Icon(FontAwesomeIcons.eye, size: 14),
@@ -63,17 +66,19 @@ class _ClassDetailState extends State<ClassDetail>
               text: 'Homework',
             ),
             Tab(
-              icon: Icon(FontAwesomeIcons.list, size: 14),
-              text: 'Attendence',
-            ),
-            Tab(
-              icon: Icon(FontAwesomeIcons.users, size: 14),
-              text: 'Students',
-            ),
-            Tab(
               icon: Icon(FontAwesomeIcons.paperclip, size: 14),
               text: 'Resources',
             ),
+            if (_type == 'teacher')
+              Tab(
+                icon: Icon(FontAwesomeIcons.list, size: 14),
+                text: 'Attendence',
+              ),
+            if (_type == 'teacher')
+              Tab(
+                icon: Icon(FontAwesomeIcons.users, size: 14),
+                text: 'Students',
+              )
           ],
           controller: _tabController,
         ),
@@ -89,9 +94,9 @@ class _ClassDetailState extends State<ClassDetail>
             overview.Overview(),
             discussion.Discussion(),
             homework.Homework(),
-            attendence.Attendence(),
-            students.Students(),
-            resources.Resources()
+            resources.Resources(),
+            if (_type == 'teacher') attendence.Attendence(),
+            if (_type == 'teacher') students.Students()
           ],
         ),
       ),

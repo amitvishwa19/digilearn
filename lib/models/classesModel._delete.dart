@@ -9,6 +9,7 @@ String classModelToJson(List<ClassModel> data) =>
 class ClassModel {
   ClassModel({
     this.id,
+    this.code,
     this.title,
     this.description,
     this.status,
@@ -16,6 +17,7 @@ class ClassModel {
   });
 
   String id;
+  String code;
   String title;
   String description;
   int status;
@@ -23,6 +25,7 @@ class ClassModel {
 
   factory ClassModel.fromJson(Map<String, dynamic> json) => ClassModel(
         id: json["id"],
+        code: json["code"],
         title: json["title"],
         description: json["description"],
         status: json["status"],
@@ -31,6 +34,7 @@ class ClassModel {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "code": code,
         "title": title,
         "description": description,
         "status": status,

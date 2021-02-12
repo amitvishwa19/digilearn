@@ -7,24 +7,29 @@ import 'package:digilearn/utils/strings.dart';
 
 class AuthService {
   //Login Service
+
+  // Future<LoginModel> testLogin(data) async {
+  //   final String _url = Strings.loginUrl;
+  //   var loginModel;
+
+  //   try {
+  //     final response = await http.post(_url, body: data);
+  //     final String res = response.body;
+  //     loginModel = LoginModel.fromJson(json.decode(res));
+  //   } catch (Exception) {
+  //     return loginModel;
+  //   }
+  //   return loginModel;
+  // }
+
   Future<LoginModel> login(data) async {
-    //final String _url = 'http://dev.digizigs.com//api/v1/auth/login';
-    //final String _url = 'http://192.168.56.1/digizigs/api/v1/auth/login';
     final String _url = Strings.loginUrl;
-
     var loginModel;
-
-    Map<String, String> header = {
-      'Content-type': 'application/json',
-      'Accept': 'application/json'
-    };
 
     try {
       //Login request
-      final response =
-          await http.post(_url, body: jsonEncode(data), headers: header);
+      final response = await http.post(_url, body: data);
       final String res = response.body;
-      var jsonResponse = json.decode(res);
       loginModel = LoginModel.fromJson(json.decode(res));
     } catch (Exception) {
       return loginModel;
@@ -82,7 +87,7 @@ class AuthService {
   }
 
   //Refresh Token
-  static Future<String> refresh(String _token) async {
+  Future<String> refresh(String _token) async {
     final String _url = Strings.refreshUrl;
     var header = {
       'Content-Type': 'application/json',
@@ -91,10 +96,9 @@ class AuthService {
     };
     //print('Auth service refresh method token: $_token');
     try {
-      final response = await http.post(_url, headers: header);
+      final response = await http.get(_url, headers: header);
       var jsonRes = jsonDecode(response.body);
-      //print('Auth service refresh jsonRes: $jsonRes');
-      var accessToken = jsonRes['access_token'];
+      var accessToken = jsonRes['token'];
       //print('Auth service refresh accessToken: $accessToken');
       //print(accessToken);
       return accessToken;

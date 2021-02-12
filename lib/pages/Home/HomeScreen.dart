@@ -4,6 +4,7 @@ import 'package:digilearn/pages/Class/classesHome.dart';
 import 'package:digilearn/pages/Home/explore.dart';
 import 'package:digilearn/pages/Home/recentActivity.dart';
 import 'package:digilearn/pages/Home/support.dart';
+import 'package:digilearn/pages/Profile/EditProfile.dart';
 import 'package:digilearn/pages/Settings/Settings.dart';
 import 'package:digilearn/pages/notification/notification.dart';
 import 'package:digilearn/services/userService.dart';
@@ -24,6 +25,20 @@ class HomeScreen extends StatefulWidget {
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
+}
+
+void settingClicked(context) {
+  Get.find<ScreenController>().change(2);
+  //print(Get.find<ScreenController>().page);
+  //Navigator.pushNamed(context, Profile.routeName);
+  Navigator.popAndPushNamed(context, Settings.routeName);
+  //Navigator.of(context).pushNamed(Settings.routeName);
+}
+
+void avatarClickrd() {
+  //Navigator.popAndPushNamed(context, EditProfile.routeName);
+  //Navigator.of(context).pushReplacementNamed(EditProfile.routeName);
+  Fluttertoast.showToast(msg: 'This will navigate to Profile edit screen');
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -79,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               )),
                           child: Padding(
                             padding: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 20),
+                                horizontal: 30, vertical: 20),
                             child: Column(
                               children: [
                                 Row(
@@ -552,27 +567,28 @@ class _HomeScreenState extends State<HomeScreen> {
               print('1 clicked');
             } else if (index == 2) {
               //print(Get.find<ScreenController>().change(2));
-              Get.find<ScreenController>().change(2);
-              //print(Get.find<ScreenController>().page);
-              //Navigator.pushNamed(context, Profile.routeName);
-              Navigator.popAndPushNamed(context, Settings.routeName);
+              settingClicked(context);
             }
           },
         ));
   }
 
   AppBar buildAppBar() {
-    String _firstName = Get.find<UserController>().userModel.value.firstname;
-    String _lastName = Get.find<UserController>().userModel.value.lastname;
+    String _firstName = Get.find<UserController>().userModel.value.firstName;
+    String _lastName = Get.find<UserController>().userModel.value.lastName;
     String _type = Get.find<UserController>().userModel.value.type;
     String _avatar = Get.find<UserController>().userModel.value.avatarUrl;
     final String _initials =
-        (Get.find<UserController>().userModel.value.firstname[0] +
-                Get.find<UserController>().userModel.value.lastname[0])
+        (Get.find<UserController>().userModel.value.firstName[0] +
+                Get.find<UserController>().userModel.value.lastName[0])
             .toUpperCase();
     return AppBar(
       actions: [
-        CAvatar(radius: 20, url: _avatar, text: _initials),
+        GestureDetector(
+            onTap: () {
+              avatarClickrd();
+            },
+            child: CAvatar(radius: 20, url: _avatar, text: _initials)),
         SizedBox(
           width: 20,
         )
@@ -598,7 +614,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (currentBackPressTime == null ||
         now.difference(currentBackPressTime) > Duration(seconds: 2)) {
       currentBackPressTime = now;
-      Fluttertoast.showToast(msg: 'Press again to exit application');
+      Fluttertoast.showToast(msg: 'Press again to exit Digilearn');
       return Future.value(false);
     }
     return Future.value(true);

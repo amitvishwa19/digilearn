@@ -2,10 +2,10 @@ import 'dart:ui';
 
 import 'package:digilearn/controllers/PageController.dart';
 import 'package:digilearn/pages/Class/classesHome.dart';
+import 'package:digilearn/services/ClassroomService.dart';
 import 'package:digilearn/utils/colors.dart';
 import 'package:digilearn/widgets/DefaultButton.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:digilearn/utils/strings.dart';
 
@@ -15,6 +15,19 @@ class CreateClass extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final title = TextEditingController();
+    final description = TextEditingController();
+
+    createClass() {
+      var data = {'title': title.text, 'description': description.text};
+      //Fluttertoast.showToast(msg: data.toString());
+
+      ClassService classService = new ClassService();
+      classService.addClass(data).then((value) {
+        print(value);
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -59,8 +72,8 @@ class CreateClass extends StatelessWidget {
                     ),
                     SizedBox(height: 20),
                     TextField(
-                      //controller: controller,
-                      keyboardType: TextInputType.number,
+                      controller: title,
+                      keyboardType: TextInputType.text,
                       decoration: InputDecoration(
                           //contentPadding: EdgeInsets.all(3),
                           border: InputBorder.none,
@@ -74,7 +87,8 @@ class CreateClass extends StatelessWidget {
                     SizedBox(height: 20),
                     TextField(
                       maxLines: 5,
-                      keyboardType: TextInputType.number,
+                      controller: description,
+                      keyboardType: TextInputType.text,
                       decoration: InputDecoration(
                           //contentPadding: EdgeInsets.all(3),
                           border: InputBorder.none,
@@ -90,7 +104,7 @@ class CreateClass extends StatelessWidget {
                       buttonText: 'Create Class',
                       updating: false,
                       onClick: () {
-                        Fluttertoast.showToast(msg: 'Create Class');
+                        createClass();
                       },
                     ),
                   ],

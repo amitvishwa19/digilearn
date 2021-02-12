@@ -46,10 +46,18 @@ class _LoginState extends State<Login> {
 
     AuthService authService = new AuthService();
     authService.login(data).then((value) {
+      print(value.success);
       if (value.success) {
+        //Set pref if user is logged in
         SharePref.setBool('isLoggedIn', true);
+        print(value.token);
+
+        //Set Pref for user token
         SharePref.setString('token', value.token);
+        print(SharePref.getString('token'));
+
         authService.user(value.token).then((value) {
+          print(value.firstName);
           Get.put(UserController()).user(value);
 
           setState(() {
@@ -61,6 +69,9 @@ class _LoginState extends State<Login> {
       } else {
         final snackBar = SnackBar(content: Text('Invalid Login Credentials'));
         Scaffold.of(context).showSnackBar(snackBar);
+        setState(() {
+          _isLoading = false;
+        });
       }
     }); //Login Service Called
   }

@@ -1,6 +1,8 @@
+import 'package:digilearn/services/ClassroomService.dart';
 import 'package:flutter/material.dart';
 import 'package:digilearn/utils/colors.dart';
 import 'package:digilearn/utils/strings.dart';
+import 'package:get/get.dart';
 
 class Overview extends StatelessWidget {
   @override
@@ -16,8 +18,12 @@ class Overview extends StatelessWidget {
             padding: EdgeInsets.all(20),
             child: Container(
               child: Center(
-                child: Text('Overview'),
-              ),
+                  // child: Text(Get.find<ClassController>()
+                  //     .classModel
+                  //     .value
+                  //     .teacher
+                  //     .firstname),
+                  ),
             ),
           )),
     );

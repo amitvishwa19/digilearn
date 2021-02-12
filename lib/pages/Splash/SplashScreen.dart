@@ -1,13 +1,17 @@
+//import 'package:digilearn/helpers/SharePref.dart';
 import 'package:digilearn/helpers/SharePref.dart';
 import 'package:digilearn/pages/Auth/Auth.dart';
-import 'package:digilearn/pages/Home/HomeScreen.dart';
+import 'package:digilearn/pages/Home/homeScreen.dart';
+//import 'package:digilearn/pages/Home/HomeScreen.dart';
 import 'package:digilearn/pages/OnBoard/OnBoardingScreen.dart';
-import 'package:digilearn/services/AuthService.dart';
+import 'package:digilearn/services/authService.dart';
 import 'package:digilearn/services/userService.dart';
+//import 'package:digilearn/services/AuthService.dart';
+//import 'package:digilearn/services/userService.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:async';
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   static String routeName = "/splashscreen";
@@ -63,29 +67,46 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
+  Future refreshToken() async {
+    String _token = await SharePref.getString('token');
+
+    //    print('Input Token:' + _token);
+    AuthService authService = new AuthService();
+    authService.refresh(_token).then((value) {
+      if (value == null) {
+        Navigator.pushReplacementNamed(context, Auth.routeName);
+        return false;
+      } else {
+        print('Token refreshed successfully');
+        return true;
+      }
+    });
+  }
+
   Future onBoarding() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    //bool _obSeen = prefs.getBool('onBoard_visible');
+    bool _onBoarding = await SharePref.getBool('onBoarding');
+    String _token = await SharePref.getString('token');
 
-    bool _onBoarding = prefs.getBool('onBoarding');
-
-    String _token = prefs.getString('token');
-    //String oldToken = prefs.getString('token');
-    //print('Old token :- $oldToken');
-
-    //Getting refresh token
-    _token = await AuthService.refresh(_token);
-    SharePref.setString('token', _token);
+    print(_onBoarding.toString());
+    print('Token: ' + _token.toString());
 
     if (_onBoarding == false) {
-      //bool _isLoggedIn = prefs.getBool('isLoggedIn');
       if (_token != null) {
+        print('Token will be refreshed');
+        //Token will be refreshed
         AuthService authService = new AuthService();
-        authService.user(_token).then((value) {
-          Get.put(UserController()).user(value);
-          Navigator.popAndPushNamed(context, HomeScreen.routeName);
+        authService.refresh(_token).then((value) {
+          if (value == null) {
+            Navigator.pushReplacementNamed(context, Auth.routeName);
+          } else {
+            SharePref.setString('token', value);
+            authService.user(value).then((value) {
+              print(value.firstName);
+              Get.put(UserController()).user(value);
+              Navigator.popAndPushNamed(context, HomeScreen.routeName);
+            });
+          }
         });
-        //Navigator.pushReplacementNamed(context, HomeScreen.routeName);
       } else {
         Navigator.pushReplacementNamed(context, Auth.routeName);
       }

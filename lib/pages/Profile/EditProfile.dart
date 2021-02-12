@@ -13,21 +13,27 @@ import 'package:digilearn/helpers/SharePref.dart';
 
 class EditProfile extends StatelessWidget {
   static String routeName = "/editProfile";
+
+  //User action function go here
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //App Bar
       appBar: AppBar(
         elevation: 0,
         leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
             onPressed: () {
               Navigator.popAndPushNamed(context, Settings.routeName);
+              //Navigator.of(context).pop();
             }),
         title: Text('Edit Profile', style: TextStyle(color: Colors.white)),
       ),
       body: WillPopScope(
           onWillPop: () async {
-            Navigator.popAndPushNamed(context, Settings.routeName);
+            //Navigator.popAndPushNamed(context, Settings.routeName);
+            navigator.pop();
             return true;
           },
           child: EditProfilePage()),
@@ -48,15 +54,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
   String userType = Get.find<UserController>().userModel.value.type;
 
   final firstname = TextEditingController(
-      text: '${Get.find<UserController>().userModel.value.firstname}');
+      text: '${Get.find<UserController>().userModel.value.firstName}');
   final lastname = TextEditingController(
-      text: '${Get.find<UserController>().userModel.value.lastname}');
+      text: '${Get.find<UserController>().userModel.value.lastName}');
   final email = TextEditingController(
       text: '${Get.find<UserController>().userModel.value.email}');
   final details = TextEditingController();
   final String _initials =
-      (Get.find<UserController>().userModel.value.firstname[0] +
-              Get.find<UserController>().userModel.value.lastname[0])
+      (Get.find<UserController>().userModel.value.firstName[0] +
+              Get.find<UserController>().userModel.value.lastName[0])
           .toUpperCase();
   String _avatar = Get.find<UserController>().userModel.value.avatarUrl;
   //final password = TextEditingController(text: '${Get.find<UserController>().userModel.value.f}');
@@ -116,8 +122,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
         _isUpdating = false;
       });
 
-      Get.put(UserController()).userModel.value.firstname = firstname.text;
-      Get.put(UserController()).userModel.value.lastname = lastname.text;
+      Get.put(UserController()).userModel.value.firstName = firstname.text;
+      Get.put(UserController()).userModel.value.lastName = lastname.text;
       Get.put(UserController()).userModel.value.type = userType;
 
       if (_avatar == null) {
@@ -197,9 +203,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
             ),
             SizedBox(height: 35),
+
+            //User First Name
             buildTextField('First Name', false, firstname, 1),
+
+            //User last Name
             buildTextField('Last Name', false, lastname, 1),
+
+            //User Email
             buildTextField('Email', false, email, 1),
+
+            //User role type
             Row(
               children: [
                 Radio(
@@ -222,7 +236,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ],
             ),
             SizedBox(height: 20),
-            buildTextField('About Me', false, details, 5),
+
+            //About me section/textbox
+            buildTextField('About Me', false, details, 4),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [

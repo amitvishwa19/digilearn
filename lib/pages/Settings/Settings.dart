@@ -16,6 +16,10 @@ import 'package:get/get.dart';
 class Settings extends StatelessWidget {
   static String routeName = "/settings";
   @override
+  appBackClicked() {}
+
+  backIconClicked() {}
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -53,18 +57,18 @@ class Settings extends StatelessWidget {
                 //Switch Profile
                 InfoNavigationCard(
                   info:
-                      'Switch to ${(Get.find<UserController>().userModel.value.type) == 'Student' ? 'Teacher' : 'Student'}  profile',
+                      'Switch to ${(Get.find<UserController>().userModel.value.type) == 'student' ? 'teacher' : 'student'}  profile',
                   icon: FontAwesomeIcons.syncAlt,
                   callback: () {
                     String _type =
                         Get.find<UserController>().userModel.value.type;
-                    if (_type == 'Teacher') {
-                      Get.find<UserController>().updateUserType('Student');
+                    if (_type == 'teacher') {
+                      Get.find<UserController>().updateUserType('student');
                       Get.find<ScreenController>().change(1);
                       //Get.find<UserController>().userModel.value.type = 'Student';
                       Navigator.popAndPushNamed(context, HomeScreen.routeName);
                     } else {
-                      Get.find<UserController>().updateUserType('Teacher');
+                      Get.find<UserController>().updateUserType('teacher');
                       Get.find<ScreenController>().change(1);
                       //Get.find<UserController>().userModel.value.type = 'Teacher';
                       Navigator.popAndPushNamed(context, HomeScreen.routeName);
@@ -216,8 +220,8 @@ class UserInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String _initials =
-        (Get.find<UserController>().userModel.value.firstname[0] +
-                Get.find<UserController>().userModel.value.lastname[0])
+        (Get.find<UserController>().userModel.value.firstName[0] +
+                Get.find<UserController>().userModel.value.lastName[0])
             .toUpperCase();
     final String _avatar = Get.find<UserController>().userModel.value.avatarUrl;
 
@@ -243,7 +247,7 @@ class UserInfoCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                      '${Get.find<UserController>().userModel.value.firstname},${Get.find<UserController>().userModel.value.lastname}'),
+                      '${Get.find<UserController>().userModel.value.firstName},${Get.find<UserController>().userModel.value.lastName}'),
                   Text('${Get.find<UserController>().userModel.value.email}'),
                   GetX<UserController>(
                       init: UserController(),

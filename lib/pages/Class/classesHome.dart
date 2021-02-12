@@ -4,7 +4,7 @@ import 'package:digilearn/pages/Class/JoinClass.dart';
 import 'package:digilearn/pages/Class/createClass.dart';
 import 'package:digilearn/pages/Class/classDetail.dart';
 import 'package:digilearn/pages/Home/homeScreen.dart';
-import 'package:digilearn/services/classService.dart';
+import 'package:digilearn/services/ClassroomService.dart';
 import 'package:digilearn/services/userService.dart';
 import 'package:digilearn/utils/colors.dart';
 import 'package:digilearn/utils/constants.dart';
@@ -20,7 +20,7 @@ class ClassesHome extends StatelessWidget {
   Widget build(BuildContext context) {
     var type = Get.find<UserController>().userModel.value.type;
     final ClassController classController = Get.put(ClassController());
-    var classCount = classController.userClasses.length;
+    //int classCount = classController.userClasses.length;
     print(classController.userClasses.length);
     return Scaffold(
       appBar: AppBar(
@@ -57,9 +57,11 @@ class ClassesHome extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        print(classController.userClasses[index].title);
+                        print(classController.userClasses[index].name);
                         Get.find<ClassController>()
-                            .setClass(classController.userClasses[index].title);
+                            .setClass(classController.userClasses[index].name);
+                        Get.find<ClassController>()
+                            .selectClass(classController.userClasses[index]);
                         Navigator.popAndPushNamed(
                             context, ClassDetail.routeName);
                       },
@@ -83,8 +85,7 @@ class ClassesHome extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        classController
-                                            .userClasses[index].title,
+                                        classController.userClasses[index].name,
                                         style: TextStyle(
                                             fontSize: 18,
                                             color: primaryColor,
